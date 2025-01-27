@@ -1,34 +1,48 @@
-import './App.css'
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
+import "./App.css";
+import { useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [notes, setNotes] = useState<string[]>([]);
+    const [inputValue, setInputValue] = useState("");
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    function resetInput(e: React.ChangeEvent<HTMLInputElement>) {
+        setInputValue(e.target.value);
+    }
+
+    function addNote(e: React.KeyboardEvent<HTMLInputElement>) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            setNotes((prev) => [...prev, inputValue]);
+            setInputValue("");
+        }
+    }
+
+    function removeNote(e: React.MouseEvent<HTMLButtonElement>) {
+        const idx = e.currentTarget.parentElement?.id;
+        if (idx) {
+            setNotes((prev) => prev.filter((_, i) => i !== +Number(idx)));
+        }
+    }
+
+    return (
+        <>
+            <h1>Notes</h1>
+            <input
+                type="text"
+                value={inputValue}
+                onChange={resetInput}
+                onKeyDown={addNote}
+            />
+            <ol>
+                {notes.map((note, idx) => (
+                    <section id={`${idx}`} className="list-item" key={idx}>
+                        <li key={idx}>{note}</li>
+                        <button type="button" onClick={removeNote}>X</button>
+                    </section>
+                ))}
+            </ol>
+        </>
+    );
 }
 
-export default App
+export default App;
