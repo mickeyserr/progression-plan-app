@@ -19,12 +19,15 @@
     "sirv": "^3.0.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react-swc": "^3.7.1",
     "cross-env": "^7.0.3",
+    "jsdom": "^26.0.0",
     "typescript": "~5.7.2",
     "vite": "^6.0.1",
     "vitest": "^3.0.4"
