@@ -22,12 +22,12 @@ function App() {
     function removeNote(e: React.MouseEvent<HTMLButtonElement>) {
         const idx = e.currentTarget.parentElement?.id;
         if (idx) {
-            setNotes(prev => prev.filter((_, i) => i !== +(idx)));
-            setNoteLabels(prev => {
+            setNotes((prev) => prev.filter((_, i) => i !== +idx));
+            setNoteLabels((prev) => {
                 const newLabels = [...prev];
-                newLabels.splice(+(idx), 1);
+                newLabels.splice(+idx, 1);
                 return newLabels;
-            })
+            });
         }
     }
 
@@ -36,9 +36,8 @@ function App() {
             const newLabels = [...prev];
             newLabels[noteIndex] = label;
             return newLabels;
-        }
-        );
-      }
+        });
+    }
 
     return (
         <>
@@ -53,9 +52,19 @@ function App() {
                 {notes.map((note, idx) => (
                     <section id={`${idx}`} className="list-item" key={idx}>
                         <li key={idx}>{note}</li>
-                        {noteLabels[idx] && <span className={`label label-${noteLabels[idx].toLowerCase()}`}>{noteLabels[idx]}</span>}
+                        {noteLabels[idx] && (
+                            <span
+                                className={`label label-${noteLabels[
+                                    idx
+                                ].toLowerCase()}`}
+                            >
+                                {noteLabels[idx]}
+                            </span>
+                        )}
                         <LabelButton noteIndex={idx} onLabel={addLabel} />
-                        <button type="button" onClick={removeNote}>X</button>
+                        <button type="button" onClick={removeNote}>
+                            X
+                        </button>
                     </section>
                 ))}
             </ol>
