@@ -1,11 +1,44 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LabelButton } from "./components/LabelButton";
 
+interface SavedState {
+    notes: string[];
+    noteLabels: string[];
+}
+
 function App() {
-    const [notes, setNotes] = useState<string[]>([]);
+    const [notes, setNotes] = useState<string[]>(() => {
+        if (typeof window !== "undefined") {
+            const saved = localStorage.getItem("notesApp");
+            if (saved) {
+                const state: SavedState = JSON.parse(saved);
+                return state.notes;
+            }
+        }
+        return [];
+    });
+
     const [inputValue, setInputValue] = useState<string>("");
-    const [noteLabels, setNoteLabels] = useState<string[]>([]);
+
+    const [noteLabels, setNoteLabels] = useState<string[]>(() => {
+        if (typeof window !== "undefined") {
+            const saved = localStorage.getItem("notesApp");
+            if (saved) {
+                const state: SavedState = JSON.parse(saved);
+                return state.noteLabels;
+            }
+        }
+        return [];
+    });
+
+    // Save state after any change
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const state: SavedState = { notes, noteLabels };
+            localStorage.setItem("notesApp", JSON.stringify(state));
+        }
+    }, [notes, noteLabels]);
 
     function resetInput(e: React.ChangeEvent<HTMLInputElement>) {
         setInputValue(e.target.value);
@@ -19,7 +52,7 @@ function App() {
         }
     }
 
-    function removeNote(e: React.MouseEvent<HTMLButtonElement>) {
+    function removeNoteAndLabel(e: React.MouseEvent<HTMLButtonElement>) {
         const idx = e.currentTarget.parentElement?.id;
         if (idx) {
             setNotes((prev) => prev.filter((_, i) => i !== +idx));
@@ -62,7 +95,7 @@ function App() {
                             </span>
                         )}
                         <LabelButton noteIndex={idx} onLabel={addLabel} />
-                        <button type="button" onClick={removeNote}>
+                        <button type="button" onClick={removeNoteAndLabel}>
                             X
                         </button>
                     </section>
